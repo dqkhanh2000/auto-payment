@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+	<script src="face-api/face-api.js"></script>
+	<script src="script.js"></script>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+		integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+		<script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>
+
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
+	
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+		integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+	<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+		integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+		crossorigin="anonymous"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+		integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+		crossorigin="anonymous"></script>
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>Face recognition</title>
+	<style>
+		.content-wrapper {
+			background-color: #f4f6f9;
+		}
+		.container-fluid {
+			width: 90%;
+			margin-left: 10%;
+		}
+		video{
+			position: absolute;
+			width: 320;
+			height: 240;
+		}
+		.ocrloader {
+			width: 316px;
+    		height: 230px;
+			position: absolute;
+			left: 2px;
+    		top: 5px;
+			backface-visibility: hidden;
+		}
+
+		.line-scan {
+			position: absolute;
+			left: 0;
+			top: 0;
+			width: 100%;
+			height: 2px;
+			background-color: #08a6f1;
+			z-index: 1000;
+			transform: translateY(150%);
+			animation: move 3s cubic-bezier(0.05, 0.01, 0.01, 0.01);
+			animation-iteration-count: infinite;
+		}
+
+
+		.ocrloader:before,
+		.ocrloader:after,
+		em:after,
+		em:before {
+			z-index: 1000;
+			border-color: #a9ff00;
+			content: "";
+			position: absolute;
+			width: 19px;
+			height: 16px;
+			border-style: solid;
+			border-width: 0px;
+		}
+
+		.ocrloader:before {
+			left: 0;
+			top: 0;
+			border-left-width: 2px;
+			border-top-width: 2px;
+		}
+
+		.ocrloader:after {
+			right: 0;
+			top: 0;
+			border-right-width: 2px;
+			border-top-width: 2px;
+		}
+
+		em:before {
+			left: 0;
+			bottom: 0;
+			border-left-width: 2px;
+			border-bottom-width: 2px;
+		}
+
+		em:after {
+			right: 0;
+			bottom: 0;
+			border-right-width: 2px;
+			border-bottom-width: 2px;
+		}
+
+		@keyframes move {
+
+			0%,
+			100% {
+				transform: translateY(230px);
+			}
+
+			50% {
+				transform: translateY(0%);
+			}
+
+			75% {
+				transform: translateY(0%);
+			}
+		}
+	</style>
+</head>
+
+<body>
+	<section class="content">
+		<div class="container-fluid">
+		  <div class="row">
+			<div class="col-md-4">
+				<div class="card card-warning">
+				  <div class="card-header">
+					<h3 class="card-title">Camera</h3>
+				  </div>
+				  <div class="card-body" style="height: 350px;"  id="card-body-camera">
+					  <div style="position: relative" class="mx-auto">
+						  <div class="ocrloader">
+							  <em></em>
+							  <div> </div>
+							  <span class="line-scan"></span>
+						  </div>
+						  <video id="video" onplay="recog();" autoplay muted
+							  playsinline></video>
+					  </div>
+				  </div>
+				</div>
+			  </div>
+			<div class="col-md-8">
+			  <div class="card card-warning">
+				<div class="card-header">
+				  <h3 class="card-title">Thông tin khách hàng</h3>
+				</div>
+				<form id="form_input">
+				  <div class="card-body">
+					<div class="form-group">
+					  <label for="exampleInputEmail1">Tên khách hàng</label>
+					  <input type="text" class="form-control" id="name" name="name" required readonly>
+					</div>
+					<div class="form-group">
+						<label for="exampleInputPassword1">Số tài khoản</label>
+						<input type="number" class="form-control" id="account-number" name="sotaikhoan" required readonly>
+					  </div>
+					<div class="form-group">
+					  <label for="exampleInputPassword1">Số tiền cần trả</label>
+					  <input type="number" class="form-control" id="money" name="price" required readonly>
+					</div>
+				  </div>
+  
+				  <div class="card-footer" id="card-body-form" style="text-align: center;">
+					<button id="btn-payment" class="btn btn-primary">Thanh toán</button>
+				  </div>
+				</form>
+			  </div>
+			</div>
+		  </div>
+		</div>
+	  </section>
+	
+</body>
+
+</html>

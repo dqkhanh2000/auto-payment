@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+	<script src="face-api/face-api.js"></script>
+	<script src="script.js"></script>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+		integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>Face detection</title>
+	<style>
+		video{
+			position: absolute;
+			width: 320;
+			height: 240;
+		}
+		.ocrloader {
+			width: 310px;
+    		height: 180px;
+			position: absolute;
+			left: 5px;
+    		top: 14%;
+			backface-visibility: hidden;
+		}
+
+		.line-scan {
+			position: absolute;
+			left: 0;
+			top: 0;
+			width: 100%;
+			height: 2px;
+			background-color: #08a6f1;
+			z-index: 1000;
+			transform: translateY(150%);
+			animation: move 3s cubic-bezier(0.05, 0.01, 0.01, 0.01);
+			animation-iteration-count: infinite;
+		}
+
+
+		.ocrloader:before,
+		.ocrloader:after,
+		em:after,
+		em:before {
+			z-index: 1000;
+			border-color: #a9ff00;
+			content: "";
+			position: absolute;
+			width: 19px;
+			height: 16px;
+			border-style: solid;
+			border-width: 0px;
+		}
+
+		.ocrloader:before {
+			left: 0;
+			top: 0;
+			border-left-width: 2px;
+			border-top-width: 2px;
+		}
+
+		.ocrloader:after {
+			right: 0;
+			top: 0;
+			border-right-width: 2px;
+			border-top-width: 2px;
+		}
+
+		em:before {
+			left: 0;
+			bottom: 0;
+			border-left-width: 2px;
+			border-bottom-width: 2px;
+		}
+
+		em:after {
+			right: 0;
+			bottom: 0;
+			border-right-width: 2px;
+			border-bottom-width: 2px;
+		}
+
+		@keyframes move {
+
+			0%,
+			100% {
+				transform: translateY(180px);
+			}
+
+			50% {
+				transform: translateY(0%);
+			}
+
+			75% {
+				transform: translateY(0%);
+			}
+		}
+	</style>
+</head>
+
+<body>
+	<div class="container">
+		<div class="row">
+			<div style="position: relative" class="mx-auto">
+				<div class="ocrloader">
+					<em></em>
+					<div> </div>
+					<span class="line-scan"></span>
+				</div>
+				<video id="video" onplay="capture()" autoplay muted playsinline></video>
+			</div>
+		</div>
+	</div>
+</body>
+
+</html>

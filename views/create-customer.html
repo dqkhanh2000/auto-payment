@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+    integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+    integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+    crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+    integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+    crossorigin="anonymous"></script>
+  <style>
+    .content-wrapper {
+      background-color: #f4f6f9;
+    }
+
+    .container-fluid {
+      width: 90%;
+      margin-left: 10%;
+    }
+
+    .ocrloader {
+      width: 310px;
+      height: 180px;
+      position: absolute;
+      left: 5px;
+      top: 14%;
+      backface-visibility: hidden;
+    }
+
+    .line-scan {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 2px;
+      background-color: #08a6f1;
+      z-index: 1000;
+      transform: translateY(150%);
+      animation: move 3s cubic-bezier(0.05, 0.01, 0.01, 0.01);
+      animation-iteration-count: infinite;
+    }
+
+
+    .ocrloader:before,
+    .ocrloader:after,
+    em:after,
+    em:before {
+      z-index: 1000;
+      border-color: #a9ff00;
+      content: "";
+      position: absolute;
+      width: 19px;
+      height: 16px;
+      border-style: solid;
+      border-width: 0px;
+    }
+
+    .ocrloader:before {
+      left: 0;
+      top: 0;
+      border-left-width: 2px;
+      border-top-width: 2px;
+    }
+
+    .ocrloader:after {
+      right: 0;
+      top: 0;
+      border-right-width: 2px;
+      border-top-width: 2px;
+    }
+
+    em:before {
+      left: 0;
+      bottom: 0;
+      border-left-width: 2px;
+      border-bottom-width: 2px;
+    }
+
+    em:after {
+      right: 0;
+      bottom: 0;
+      border-right-width: 2px;
+      border-bottom-width: 2px;
+    }
+
+    @keyframes move {
+
+      0%,
+      100% {
+        transform: translateY(180px);
+      }
+
+      50% {
+        transform: translateY(0%);
+      }
+
+      75% {
+        transform: translateY(0%);
+      }
+    }
+  </style>
+  <script src="face-api/face-api.js"></script>
+  <script src="script.js"></script>
+</head>
+
+<body class="hold-transition sidebar-mini">
+  <div class="content-wrapper sidebar-mini">
+
+    <!-- Main content -->
+    <section class="content">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-md-8">
+            <!-- general form elements -->
+            <div class="card card-warning">
+              <div class="card-header">
+                <h3 class="card-title">Thêm thông tin khách hàng</h3>
+              </div>
+              <!-- /.card-header -->
+              <!-- <div class="card-body"> -->
+              <form id="form_input">
+                <div class="card-body">
+                  <div class="form-group">
+                    <label for="exampleInputEmail1">Tên khách hàng</label>
+                    <input type="text" class="form-control" id="name" name="name"
+                      placeholder="Nhập họ tên" required>
+                      <div class="invalid-feedback">
+                        Không được để trống
+                      </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="exampleInputPassword1">Mật khẩu</label>
+                    <input type="password" class="form-control" id="password" name="password"
+                      placeholder="password" required>
+                      <div class="invalid-feedback">
+                        Không được để trống
+                      </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="exampleInputPassword1">Số tiền</label>
+                    <input type="number" class="form-control" id="balance" name="phone"
+                      placeholder="Nhập số tiền" required>
+                    <div class="invalid-feedback">
+                        Không được để trống
+                      </div>
+                  </div>
+                </div>
+
+                <div class="card-footer" id="card-body-form" style="text-align: center;">
+                  <button id="btn-send" class="btn btn-primary">Thêm mới</button>
+                </div>
+              </form>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <div class="card card-warning">
+              <div class="card-header">
+                <h3 class="card-title">Camera</h3>
+              </div>
+              <div class="card-body" id="card-body-camera">
+                <div style="position: relative" class="mx-auto">
+                  <div class="ocrloader">
+                    <em></em>
+                    <div> </div>
+                    <span class="line-scan"></span>
+                  </div>
+                  <video id="video" autoplay muted playsinline></video>
+                </div>
+                <button type="button" onclick="capture()" class="btn btn-success mx-auto ml-3 mt-3">Quét</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- /.content -->
+  </div>
+
+</body>
+
+</html>
